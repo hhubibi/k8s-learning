@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: helloworld-controller
+spec:
+  replicas: 3  # 设置 Replica 数量
+  selector:
+    app: helloworld  # 选择标签为 app=helloworld 的 Pod
+  template:
+    metadata:
+      labels:
+        app: helloworld   # 添加的标签
+    spec:
+      containers:
+      - name: helloworld-demo
+        image: helloworld:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
