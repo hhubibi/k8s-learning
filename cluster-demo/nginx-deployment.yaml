@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2  # 指定 Pod 副本数量
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80  # nginx 默认端口
+        volumeMounts:
+        - name: nginx-vol
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: nginx-vol
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort  # 使用 NodePort 类型暴露服务
+  ports:
+  - port: 80  # Service 端口
+    targetPort: 80  # Pod 端口
+    nodePort: 30080  # NodePort，可以通过任意节点的 IP 访问
+  selector:
+    app: nginx
